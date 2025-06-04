@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next';
-import { AsyncDataStatus, useRouteStore } from './routeStore'
+import { AsyncDataStatus, useRouteStore } from './store/routeStore'
 import { RouteTable } from './components/RouteTable'
 import { RouteForm } from './components/RouteForm'
 

@@ -1,6 +1,13 @@
 import { create } from 'zustand'
-import type { Route } from './model'
-import { createRoute, getRoutes } from './api'
+import { createRoute, getRoutes } from '../api'
+
+export interface Route {
+    id?: number;
+    name: string;
+    path: string;
+    is_enabled: boolean;
+    method: string;
+} 
 
 export type AsyncDataStatus = 
     | 'init'

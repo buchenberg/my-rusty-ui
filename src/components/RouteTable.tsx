@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { AsyncDataStatus, type AsyncData } from '../routeStore';
-import type { Route } from '../model';
+import { AsyncDataStatus, type AsyncData } from '../store/routeStore';
+import type { Route } from '../store/model';
 
 type RouteTableProps = {
   routes: AsyncData<Route[]>;

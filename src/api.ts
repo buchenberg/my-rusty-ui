@@ -1,4 +1,4 @@
-import type { Route } from "./model";
+import type { Route } from "./store/model";
 
 export async function getRoutes(): Promise<Route[]>{
     const response = await fetch("/api/routes");

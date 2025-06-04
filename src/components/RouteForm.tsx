@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Route } from '../model';
+import type { Route } from '../store/model';
 
 type RouteFormProps = {
   onAddRoute: (route: Route) => void;
