@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import './App.css'
 import { AsyncDataStatus, useRouteStore } from './routeStore'
 import { RouteTable } from './components/RouteTable'
 import { RouteForm } from './components/RouteForm'
