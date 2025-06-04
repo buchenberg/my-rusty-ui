@@ -2,11 +2,24 @@ import { create } from 'zustand'
 import type { Route } from './model'
 import { createRoute, getRoutes } from './api'
 
+export type AsyncDataStatus = 
+    | 'init'
+    | 'loading'
+    | 'loaded'
+    | 'error'
+    | 'updating';
+
+export const AsyncDataStatus = {
+    INIT: 'init' as AsyncDataStatus,
+    LOADING: 'loading' as AsyncDataStatus,
+    LOADED: 'loaded' as AsyncDataStatus,
+    ERROR: 'error' as AsyncDataStatus,
+    UPDATING: 'updating' as AsyncDataStatus,
+};
+
 export interface AsyncData<T> {
     data: T
-    loaded: boolean
-    loading: boolean
-    updating: boolean
+    status: AsyncDataStatus,
     error: string | null
 }
 
@@ -19,9 +32,7 @@ export interface RouteState {
 export const useRouteStore = create<RouteState>()((set) => ({
     routes: {
         data: [],
-        loading: false,
-        loaded: false,
-        updating: false,
+        status: AsyncDataStatus.INIT,
         error: null
     },
     initRoutes: () => {
@@ -30,8 +41,7 @@ export const useRouteStore = create<RouteState>()((set) => ({
         set((state) => ({
             routes: {
                 ...state.routes,
-                loading: true,
-                error: null
+                status: AsyncDataStatus.LOADING,
             }
         }));
         getRoutes()
@@ -42,19 +52,18 @@ export const useRouteStore = create<RouteState>()((set) => ({
                     routes: {
                         ...state.routes,
                         data: fetchedRoutes,
-                        loaded: true,
-                        loading: false
+                        status: AsyncDataStatus.LOADED,
                     }
                 }));
             })
             .catch((error) => {
                 console.error('Error fetching routes:', error);
-                set((state) => ({   
-                    routes: { 
+                set((state) => ({
+                    routes: {
                         ...state.routes,
-                        loading: false, 
-                        error: error.message 
-                    }    
+                        status: AsyncDataStatus.ERROR,
+                        error: error.message
+                    }
                 }));
             });
     },
@@ -62,7 +71,7 @@ export const useRouteStore = create<RouteState>()((set) => ({
         set((state) => ({
             routes: {
                 ...state.routes,
-                updating: true,
+                status: AsyncDataStatus.UPDATING,
                 error: null
             }
         }));
@@ -73,7 +82,7 @@ export const useRouteStore = create<RouteState>()((set) => ({
                 set((state) => ({
                     routes: {
                         ...state.routes,
-                        updating: false,
+                        status: AsyncDataStatus.LOADED,
                         data: [...state.routes.data, createdRoute]
                     }
                 }));
@@ -81,12 +90,12 @@ export const useRouteStore = create<RouteState>()((set) => ({
             .catch((error) => {
                 console.error('Error creating route:', error);
                 set((state) => ({
-                    routes: { 
-                        ...state.routes, 
-                        updating: false, 
-                        error: error.message 
+                    routes: {
+                        ...state.routes,
+                        status: AsyncDataStatus.ERROR,
+                        error: error.message
                     }
-                })); 
+                }));
             });
     }
 }))
