@@ -9,29 +9,27 @@ function App() {
 
   useEffect(() => {
     if (routes.status === AsyncDataStatus.INIT) {
-      console.log('No routes found, initializing...');
       initRoutes();
     }
   }, [routes.status, initRoutes]);
 
   return (
-    <section className="section">
-      <div className="container has-text-left">
+   
+      <div className="container columns is-centered is-4">
+        {/* Form */}
+      <div className='column'>
+        <h1 className='title is-2'>Create a Route</h1>
+        <RouteForm
+          onAddRoute={addRoute}
+          isUpdating={routes.status === AsyncDataStatus.UPDATING}
+        />
+        </div>
         {/* Table */}
-        <div className='block'>
-          <h1 className='title is-1'>Routes</h1>
+        <div className='column'>
+          <h1 className='title is-2'>See a Route</h1>
           <RouteTable routes={routes} />
         </div>
-        {/* Form */}
-        <div className='block'>
-            <h1 className='title is-1'>Create Route</h1>
-            <RouteForm 
-              onAddRoute={addRoute} 
-              isUpdating={routes.status === AsyncDataStatus.UPDATING} 
-            />
-        </div >
       </div>
-    </section>
   )
 }
 
