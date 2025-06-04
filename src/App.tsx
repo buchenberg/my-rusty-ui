@@ -18,7 +18,7 @@ function App() {
     <div className="container columns is-centered is-4">
       {/* Form */}
       <div className='column'>
-        <h1 className='title is-2'>{t('Create Route')}</h1>
+        <h1 className='title is-2'>{t('Create a Route')}</h1>
         <RouteForm
           onAddRoute={addRoute}
           isUpdating={routes.status === AsyncDataStatus.UPDATING}

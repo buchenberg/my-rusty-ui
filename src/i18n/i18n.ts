@@ -1,9 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-// the translations
-// (tip move them in a JSON file and import them,
-// or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
+// TODO: https://react.i18next.com/guides/multiple-translation-files)
 const resources = {
   en: {
     translation: {
@@ -18,13 +16,13 @@ const resources = {
         "Path": "Path",
         "Is Enabled": "Is Enabled",
         "Routes": "Routes",
-        "Create Route": "Create Route",
+        "Create a Route": "Create a Route",
         "See a Route": "See a Route",
         "Enabled": "Enabled",
         "Disabled": "Disabled",
         "Submit": "Submit",
         "Enter the name of the route...": "Enter the name of the route...",
-        "Enter the route path": "Enter the route path",
+        "Enter the route path": "Enter the route path...",
         "Select method...": "Select method...",
         "Enabled?": "Enabled?",
         "Error: {{errorMessage}}": "Error: {{errorMessage}}"
@@ -43,13 +41,13 @@ const resources = {
         "Path": "Chemin",
         "Is Enabled": "Est Activé",
         "Routes": "Routes",
-        "Create Route": "Créer un Route",
+        "Create a Route": "Créer un Route",
         "See a Route": "Voir un Route",
         "Enabled": "Activé",
         "Disabled": "Désactivé",
         "Submit": "Soumettre",
         "Enter the name of the route...": "Entrez le nom du route...",
-        "Enter the route path": "Entrez le chemin du route",
+        "Enter the route path": "Entrez le chemin du route...",
         "Select method...": "Sélectionnez la méthode...",
         "Enabled?": "Activé?",
         "Error: {{errorMessage}}": "Erreur: {{errorMessage}}"

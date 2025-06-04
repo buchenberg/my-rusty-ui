@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Route } from '../store/model';
+import type { Route } from '../store/routeStore';
+
 
 type RouteFormProps = {
   onAddRoute: (route: Route) => void;
@@ -48,7 +49,7 @@ export const RouteForm = ({ onAddRoute, isUpdating }: RouteFormProps) => {
   };
 
   return (
-    <form className="box">
+    <div className="card p-4 mb-4">
       <div className="field">
         <label className="label">{t('Name')}</label>
         <div className="control">
@@ -104,12 +105,12 @@ export const RouteForm = ({ onAddRoute, isUpdating }: RouteFormProps) => {
       <div className="control">
         <button 
           type="button"
-          className="button is-link" 
+          className={"button is-link" + (isUpdating ? ' is-loading' : '')}
           onClick={handleSubmit} 
           disabled={isUpdating}>
           {t('Submit')}
         </button>
       </div>
-    </form>
+    </div>
   );
 };

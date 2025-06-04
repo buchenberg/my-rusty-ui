@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { createRoute, getRoutes } from '../api'
+import { createRoute, getRoutes } from '../network/api'
 
 export interface Route {
     id?: number;

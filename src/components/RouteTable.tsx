@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { AsyncDataStatus, type AsyncData } from '../store/routeStore';
-import type { Route } from '../store/model';
+import { AsyncDataStatus, type AsyncData, type Route } from '../store/routeStore';
 
 type RouteTableProps = {
   routes: AsyncData<Route[]>;
@@ -12,7 +11,7 @@ export const RouteTable = ({ routes }: RouteTableProps) => {
   const renderStatus = () => {
     switch (routes.status) {
       case AsyncDataStatus.LOADING:
-        return <span className="has-text-info">{t('Loading')}</span>;
+        return <span className="has-text-info">{t('Loading')}...</span>;
       case AsyncDataStatus.LOADED:
         return <span className="has-text-success">{t('Loaded')}</span>;
       case AsyncDataStatus.ERROR:
@@ -20,17 +19,17 @@ export const RouteTable = ({ routes }: RouteTableProps) => {
           {t('Error: {{errorMessage}}', { errorMessage: routes.error })}
         </span>;
       case AsyncDataStatus.UPDATING:
-        return <span className="has-text-warning">{t('Updating')}</span>;
+        return <span className="has-text-warning">{t('Updating')}...</span>;
       case AsyncDataStatus.INIT:
-        return <span className="has-text-grey">{t('Initializing')}</span>;
+        return <span className="has-text-grey">{t('Initializing')}...</span>;
       default:
         return <></>;
     }
   };
 
   return (
-    <div className='box'>
-      <table className="table">
+    <div className='card p-4 mb-4'>
+      <table className="table is-fullwidth">
         <thead>
           <tr>
             <th>{t('Id')}</th>
@@ -50,8 +49,15 @@ export const RouteTable = ({ routes }: RouteTableProps) => {
               <td>{route.is_enabled ? t('Enabled') : t('Disabled')}</td>
             </tr>
           ))}
+          {routes.status === AsyncDataStatus.LOADED && routes.data.length === 0 && (
+            <tr>
+              <td colSpan={5} className="has-text-centered">
+                {t('No routes available')}
+              </td>
+            </tr>
+          )}
           <tr>
-            <td colSpan={5} className="has-text-centered">{renderStatus()}</td>
+            <td colSpan={5} className="has-text-centered">Status: {renderStatus()}</td>
           </tr>
         </tbody>
       </table>
