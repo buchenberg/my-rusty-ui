@@ -27,7 +27,7 @@ export async function createRoute(route: Route): Promise<Route> {
         throw new Error(`Error creating route: ${response.statusText}`);
     }
     const data = await response.json();
-    return data;
+    return { ...route, id: data }; // Assuming the API returns the id
 }
 
 export async function updateRoute(id: string, route: Route): Promise<Route> {

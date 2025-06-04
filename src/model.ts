@@ -1,5 +1,5 @@
 export interface Route {
-    //id: string;
+    id?: number;
     name: string;
     path: string;
     is_enabled: boolean;

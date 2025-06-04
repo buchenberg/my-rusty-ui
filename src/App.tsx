@@ -1,11 +1,12 @@
-import { useEffect, useState, type MouseEventHandler } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { createRoute, getRoutes } from './api'
 import type { Route } from './model'
+import { useRouteStore } from './routeStore'
 
 function App() {
-  const [routes, setRoutes] = useState<Route[]>();
-  const [newRoute, setNewRoute] = useState<Route>({
+
+  const { routes, initRoutes, addRoute } = useRouteStore((state) => state);
+  const [formData, setFormData] = useState<Route>({
     name: '',
     path: '',
     is_enabled: false,
@@ -14,38 +15,14 @@ function App() {
 
 
   useEffect(() => {
-    // This effect runs once when the component mounts
-    console.log('App component mounted');
+    if (!routes.loaded && !routes.loading) {
+      console.log('No routes found, initializing...');
+      initRoutes();
+    }
+  });
 
-    // createRoute({
-    //   name: 'Test Route',
-    //   method: 'GET',
-    //   path: '/test',
-    //   is_enabled: true,
-    // }).then((route) => {
-    //   console.log('Route created:', route);
-    // }).catch((error) => {
-    //   console.error('Error creating route:', error);
-    // });
-
-
-    getRoutes()
-      .then((response) => {
-        setRoutes(response);
-      }).catch((error) => {
-        console.error('Error fetching routes:', error);
-      });
-
-
-
-    // Cleanup function to run when the component unmounts
-    return () => {
-      console.log('App component unmounted');
-    };
-  }, []);
-
-  const resetNewRoute = () => {
-    setNewRoute({
+  const initializeFormData = () => {
+    setFormData({
       name: '',
       path: '',
       is_enabled: false,
@@ -53,20 +30,27 @@ function App() {
     });
   };
 
-
   const handleSubmit = () => {
-    console.log('Submitting new route:', newRoute);
-
-    createRoute(newRoute)
-      .then((route) => {
-        console.log('Route created:', route);
-      })
-      .catch((error) => {
-        console.error('Error creating route:', error);
-      });
-    resetNewRoute();
+    console.log('Submitting new route:', formData);
+    addRoute(formData);
+    initializeFormData();
   };
 
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, name: event.target.value }));
+  };
+
+  const handleMethodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData((prev) => ({ ...prev, method: event.target.value }));
+  };
+
+  const handlePathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, path: event.target.value }));
+  };
+
+  const handleEnabledChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, is_enabled: event.target.checked }));
+  };
 
   return (
     <section className="section">
@@ -76,24 +60,46 @@ function App() {
           <div className='box'>
             <table className="table">
               <thead>
-                <th>Name</th>
-                <th>Method</th>
-                <th>Path</th>
-                <th>Is Enabled</th>
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Method</th>
+                  <th>Path</th>
+                  <th>Is Enabled</th>
+                </tr>
               </thead>
-              {routes && (
-                <tbody>
-                  {routes.map((route) => (
-                    <tr key={route.name}>
-                      <td>{route.name}</td>
-                      <td>{route.method}</td>
-                      <td>{route.path}</td>
-                      <td>{route.is_enabled ? 'Enabled' : 'Disabled'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
+              <tbody>
+                {routes.data.map((route) => (
+                  <tr key={route.id}>
+                    <td>{route.id}</td>
+                    <td>{route.name}</td>
+                    <td>{route.method}</td>
+                    <td>{route.path}</td>
+                    <td>{route.is_enabled ? 'Enabled' : 'Disabled'}</td>
+                  </tr>
+                ))}
 
+                {routes.loading &&
+                  <tr>
+                    <td colSpan={5} className="has-text-centered">Loading...</td>
+                  </tr>
+                }
+                {routes.updating && (
+                  <tr>
+                    <td colSpan={5} className="has-text-centered">Updating...</td>
+                  </tr>
+                )}
+                {routes.error && (
+                  <tr>
+                    <td colSpan={5} className="has-text-centered has-text-danger">{routes.error}</td>
+                  </tr>
+                )}
+                {routes.data.length === 0 && !routes.loading && !routes.error &&
+                  <tr>
+                    <td colSpan={5} className="has-text-centered">No routes found</td>
+                  </tr>
+                }
+              </tbody>
             </table>
           </div>
         </div>
@@ -106,14 +112,24 @@ function App() {
               <div className="field">
                 <label className="label">Name</label>
                 <div className="control">
-                  <input className="input" type="text" placeholder="Enter the name of the route..." onChange={event => setNewRoute({ ...newRoute, name: event.target.value })} />
+                  <input
+                    className="input"
+                    type="text"
+                    value={formData.name}
+                    placeholder="Enter the name of the route..."
+                    onChange={handleNameChange}
+                  />
                 </div>
               </div>
               <div className="field">
                 <label className="label">Method</label>
                 <div className="control">
                   <div className="select">
-                    <select defaultValue={''} onChange={event => setNewRoute({ ...newRoute, method: event.target.value })}>
+                    <select
+                      defaultValue={''}
+                      onChange={handleMethodChange}
+                      value={formData.method}
+                    >
                       <option value={''}>Select method...</option>
                       <option value={'GET'}>GET</option>
                       <option value={'POST'}>POST</option>
@@ -126,28 +142,38 @@ function App() {
               <div className="field">
                 <label className="label">Path</label>
                 <div className="control">
-                  <input className="input" type="text" placeholder="Enter the route path" onChange={event => setNewRoute({ ...newRoute, path: event.target.value })} />
+                  <input
+                    className="input"
+                    type="text"
+                    value={formData.path}
+                    placeholder="Enter the route path"
+                    onChange={handlePathChange}
+                  />
                 </div>
               </div>
               <div className="field">
                 <div className="control">
                   <label className="checkbox">
-                    <input type="checkbox" onChange={event => setNewRoute({ ...newRoute, is_enabled: event.target.checked })} />
+                    <input
+                      checked={formData.is_enabled}
+                      type="checkbox"
+                      onChange={handleEnabledChange}
+                    />
                     <span className='ml-2'>Enabled?</span>
                   </label>
                 </div>
               </div>
               <div className="control">
-                <button className="button is-link" onClick={handleSubmit}>Submit</button>
+                <button className="button is-link" onClick={handleSubmit} disabled={routes.updating}>Submit</button>
               </div>
             </form>
           </div>
         </div >
-
-
       </div>
     </section>
   )
 }
 
 export default App
+
+
