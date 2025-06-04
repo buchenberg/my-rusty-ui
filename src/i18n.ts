@@ -26,10 +26,6 @@ const resources = {
         "Enter the name of the route...": "Enter the name of the route...",
         "Enter the route path": "Enter the route path",
         "Select method...": "Select method...",
-        "GET": "GET",
-        "POST": "POST",
-        "PUT": "PUT",
-        "DELETE": "DELETE",
         "Enabled?": "Enabled?",
         "Error: {{errorMessage}}": "Error: {{errorMessage}}"
     },
@@ -55,10 +51,6 @@ const resources = {
         "Enter the name of the route...": "Entrez le nom du route...",
         "Enter the route path": "Entrez le chemin du route",
         "Select method...": "Sélectionnez la méthode...",
-        "GET": "GET",
-        "POST": "POST",
-        "PUT": "PUT",
-        "DELETE": "DELETE",
         "Enabled?": "Activé?",
         "Error: {{errorMessage}}": "Erreur: {{errorMessage}}"
     }
