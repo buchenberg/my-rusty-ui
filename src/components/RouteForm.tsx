@@ -69,10 +69,10 @@ export const RouteForm = ({ onAddRoute, isUpdating }: RouteFormProps) => {
               value={formData.method}
               onChange={handleMethodChange}>
               <option value={''}>{t('Select method...')}</option>
-              <option value={'GET'}>{t('GET')}</option>
-              <option value={'POST'}>{t('POST')}</option>
-              <option value={'PUT'}>{t('PUT')}</option>
-              <option value={'DELETE'}>{t('DELETE')}</option>
+              <option value={'GET'}>GET</option>
+              <option value={'POST'}>POST</option>
+              <option value={'PUT'}>PUT</option>
+              <option value={'DELETE'}>DELETE</option>
             </select>
           </div>
         </div>
